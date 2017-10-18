@@ -44,7 +44,7 @@ describe('haste', () => {
 
         const result = await runner.run({ task: successful });
 
-        expect(result).toEqual(undefined);
+        expect(result.content).toEqual(undefined);
         expect(stdout.mock.calls).toEqual([['successful-task\n']]);
       });
     });
@@ -83,7 +83,7 @@ describe('haste', () => {
           { task: successful }
         );
 
-        expect(result).toEqual(undefined);
+        expect(result.content).toEqual(undefined);
         expect(stdout.mock.calls).toEqual([['successful-task\n'], ['successful-task\n']]);
       });
     });
@@ -214,8 +214,7 @@ describe('haste', () => {
         });
 
         const result = await runner.run({ task: returnedValue });
-
-        expect(result).toEqual('some-value');
+        expect(result[0].content).toEqual('some-value');
         expect(stdout.mock.calls).toEqual([['returned-value-task\n']]);
       });
     });
@@ -233,7 +232,7 @@ describe('haste', () => {
           { task: loggingValue }
         );
 
-        expect(result).toEqual('some-other-value');
+        expect(result[1].content).toEqual('some-other-value');
         expect(stdout.mock.calls).toEqual([['returned-value-task\n'], ['logging-value-task\n'], ['some-value\n']]);
       });
     });
@@ -248,7 +247,7 @@ describe('haste', () => {
 
         const result = await runner.run({ task: loggingOptions, options: { value: 'some-value' } });
 
-        expect(result).toEqual('some-value');
+        expect(result[0].content).toEqual('some-value');
         expect(stdout.mock.calls).toEqual([['logging-options-task\n'], ['{ value: \'some-value\' }\n']]);
       });
     });
@@ -265,7 +264,7 @@ describe('haste', () => {
 
         const result = await runner.run({ task: './successful-task' });
 
-        expect(result).toEqual(undefined);
+        expect(result.content).toEqual(undefined);
         expect(stdout.mock.calls).toEqual([['successful-task\n']]);
       });
     });
@@ -280,7 +279,7 @@ describe('haste', () => {
 
         const result = await runner.run({ task: 'haste-task-successful' });
 
-        expect(result).toEqual(undefined);
+        expect(result.content).toEqual(undefined);
         expect(stdout.mock.calls).toEqual([['successful-task\n']]);
       });
     });
@@ -295,7 +294,7 @@ describe('haste', () => {
 
         const result = await runner.run({ task: 'successful' });
 
-        expect(result).toEqual(undefined);
+        expect(result.content).toEqual(undefined);
         expect(stdout.mock.calls).toEqual([['successful-task\n']]);
       });
     });
@@ -313,7 +312,7 @@ describe('haste', () => {
         const options = { value: 'some-value' };
         const result = await runner.run(runner.tasks[loggingOptions](options));
 
-        expect(result).toEqual('some-value');
+        expect(result[0].content).toEqual('some-value');
         expect(stdout.mock.calls).toEqual([['logging-options-task\n'], ['{ value: \'some-value\' }\n']]);
       });
     });
@@ -329,7 +328,7 @@ describe('haste', () => {
         const options = { value: 'some-value' };
         const result = await runner.run(runner.tasks.successfulCamelCase(options));
 
-        expect(result).toEqual('some-value');
+        expect(result[0].content).toEqual('some-value');
         expect(stdout.mock.calls).toEqual([['successful-camel-case-task\n'], ['{ value: \'some-value\' }\n']]);
       });
     });
