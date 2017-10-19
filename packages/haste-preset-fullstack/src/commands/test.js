@@ -1,26 +1,23 @@
 const LoggerPlugin = require('haste-plugin-logger');
 const paths = require('../../config/paths');
 
-module.exports = async (configure, { watch: shouldWatch }) => {
-  const { run, watch, tasks } = configure({
-    persistent: shouldWatch,
+module.exports = async (configure) => {
+  const { run, tasks } = configure({
     plugins: [
       new LoggerPlugin(),
     ],
   });
 
-  const { read, mocha } = tasks;
+  const { read, mocha, protractor } = tasks;
 
   await run(
-    read({ pattern: `${paths.test}/**/*.spec.js` }),
-    mocha()
+    read({ pattern: `${paths.src}/**/*.spec.js` }),
+    mocha({
+      require: [require.resolve('../../config/test-setup')],
+      timeout: 30000,
+    })
   );
 
-  if (shouldWatch) {
-    watch([`${paths.src}/**/*.js`, `${paths.test}/**/*.js`], changed => run(
-      read({ pattern: changed }),
-      mocha()
-    ));
-  }
+  await run(protractor({ }));
 };
 

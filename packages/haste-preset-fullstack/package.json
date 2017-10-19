@@ -4,6 +4,15 @@
   "main": "./src/index.js",
   "license": "MIT",
   "dependencies": {
+    "autoprefixer": "^7.1.5",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-register": "^6.26.0",
+    "case-sensitive-paths-webpack-plugin": "^2.1.1",
+    "duplicate-package-checker-webpack-plugin": "^1.2.6",
+    "eslint-config-wix": "^1.1.16",
+    "extract-text-webpack-plugin": "^3.0.1",
+    "happypack": "^4.0.0",
     "haste-plugin-dashboard": "^0.1.0",
     "haste-plugin-loader": "^0.1.0",
     "haste-plugin-logger": "^0.1.0",
@@ -12,11 +21,14 @@
     "haste-task-copy": "^0.0.2",
     "haste-task-eslint": "^0.1.0",
     "haste-task-mocha": "^0.1.2",
+    "haste-task-protractor": "^0.1.0",
     "haste-task-read": "^0.1.0",
     "haste-task-sass": "^0.1.2",
     "haste-task-server": "^0.1.2",
     "haste-task-webpack": "^0.1.0",
     "haste-task-webpack-dev-server": "^0.1.2",
-    "haste-task-write": "^0.1.0"
+    "haste-task-write": "^0.1.0",
+    "webpack": "^3.8.1",
+    "webpack-bundle-analyzer": "^2.9.0"
   }
 }

@@ -7,50 +7,76 @@ module.exports = async (configure) => {
     plugins: [
       new DashboardPlugin({
         oneLinerTasks: true,
-        tasks: ['babel', 'sass', 'server', 'webpack-dev-server']
+        tasks: ['server', 'webpack-dev-server', 'mocha']
       }),
     ],
   });
 
-  const { clean, read, write, babel, sass, webpackDevServer, server } = tasks;
+  const { clean, read, write, babel, sass, webpackDevServer, server, mocha } = tasks;
 
-  await clean({ pattern: `${paths.build}/*` });
+  await run(clean({ pattern: `${paths.build}/*` }));
 
   await Promise.all([
     run(
-      read({ pattern: `${paths.assets}/**/*.*` }),
-      write({ target: paths.build })
-    ),
-    run(
-      read({ pattern: `${paths.src}/**/*.js` }),
+      read({ pattern: `{${paths.src},${paths.test}}/**/*.js` }),
       babel(),
       write({ target: paths.build })
     ),
     run(
       read({ pattern: `${paths.src}/**/*.scss` }),
-      sass(),
+      sass({
+        includePaths: ['node_modules', 'node_modules/compass-mixins/lib']
+      }),
       write({ target: paths.build })
     ),
-    run(webpackDevServer({ configPath: paths.config.webpack.development })),
+    run(
+      read({
+        pattern: [
+          `${paths.assets}/**/*.*`,
+          `${paths.src}/**/*.{ejs,html,vm}`,
+          `${paths.src}/**/*.{css,json,d.ts}`,
+        ]
+      }),
+      write({ target: paths.build })
+    ),
+    run(
+      read({
+        pattern: [
+          `${paths.assets}/**/*.*`,
+          `${paths.src}/**/*.{ejs,html,vm}`,
+        ]
+      }),
+      write({ target: paths.statics })
+    ),
+    run(webpackDevServer({ configPath: paths.config.webpack.production })),
+    run(
+      read({ pattern: `${paths.src}/**/*.spec.js` }),
+      mocha({
+        require: [require.resolve('../../config/test-setup')],
+        timeout: 30000,
+      })
+    )
   ]);
 
-  await run(server({ serverPath: 'src/server.js' }));
+  await run(server({ serverPath: 'index.js' }));
 
   watch(`${paths.src}/**/*.js`, changed => run(
     read({ pattern: changed }),
     babel(),
     write({ target: paths.build }),
-    server({ serverPath: 'dist/src/server.js' })
+    server({ serverPath: 'index.js' })
   ));
 
   watch(`${paths.src}/**/*.scss`, changed => run(
     read({ pattern: changed }),
-    sass(),
+    sass({
+      includePaths: ['node_modules', 'node_modules/compass-mixins/lib']
+    }),
     write({ target: paths.build })
   ));
 
-  watch(paths.assets, changed => run(
-    read({ pattern: changed }),
-    write({ target: paths.build })
+  watch(`${paths.src}/**/*.js`, () => run(
+    read({ pattern: `${paths.src}/**/*.spec.js` }),
+    mocha({ timeout: 30000 })
   ));
 };

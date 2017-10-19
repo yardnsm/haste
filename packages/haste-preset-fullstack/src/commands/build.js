@@ -1,10 +1,10 @@
-const LoaderPlugin = require('haste-plugin-loader');
+const LoggerPlugin = require('haste-plugin-logger');
 const paths = require('../../config/paths');
 
 module.exports = async (configure) => {
   const { run, tasks } = configure({
     plugins: [
-      new LoaderPlugin({ oneLinerTasks: false }),
+      new LoggerPlugin(),
     ],
   });
 
@@ -14,18 +14,35 @@ module.exports = async (configure) => {
 
   await Promise.all([
     run(
-      read({ pattern: `${paths.src}/**/*.js` }),
+      read({ pattern: `{${paths.src},${paths.test}}/**/*.js` }),
       babel(),
       write({ target: paths.build })
     ),
     run(
       read({ pattern: `${paths.src}/**/*.scss` }),
-      sass(),
+      sass({
+        includePaths: ['node_modules', 'node_modules/compass-mixins/lib']
+      }),
       write({ target: paths.build })
     ),
     run(
-      read({ pattern: `${paths.assets}/**/*.*` }),
+      read({
+        pattern: [
+          `${paths.assets}/**/*.*`,
+          `${paths.src}/**/*.{ejs,html,vm}`,
+          `${paths.src}/**/*.{css,json,d.ts}`,
+        ]
+      }),
       write({ target: paths.build })
+    ),
+    run(
+      read({
+        pattern: [
+          `${paths.assets}/**/*.*`,
+          `${paths.src}/**/*.{ejs,html,vm}`,
+        ]
+      }),
+      write({ target: paths.statics })
     ),
     run(webpack({ configPath: paths.config.webpack.production }))
   ]);

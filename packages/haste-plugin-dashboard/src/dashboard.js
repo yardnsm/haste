@@ -23,7 +23,7 @@ module.exports = class Dashboard {
 
   getLogger(panelKey) {
     return (log) => {
-      return this.panels[panelKey].log(log);
+      return this.panels[panelKey].log(log.replace(/\n$/, ''));
     };
   }
 
