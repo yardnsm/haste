@@ -1,21 +1,20 @@
-'use strict';
-
 const webpack = require('webpack');
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const {mergeByConcat, isSingleEntry, inTeamCity} = require('../lib/utils');
+const { mergeByConcat, isSingleEntry, inTeamCity } = require('../src/utils');
 const webpackConfigCommon = require('./webpack.config.common');
 const projectConfig = require('./project');
-const DynamicPublicPath = require('../lib/plugins/dynamic-public-path');
-const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
+const DynamicPublicPath = require('../src/plugins/dynamic-public-path');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
-const {isObject} = require('lodash');
+const { isObject } = require('lodash');
+
 const defaultCommonsChunkConfig = {
   name: 'commons',
   minChunks: 2
 };
 
-const config = ({debug, separateCss = projectConfig.separateCss(), analyze, disableModuleConcatenation} = {}) => {
+const config = ({ debug, separateCss = projectConfig.separateCss(), analyze, disableModuleConcatenation } = {}) => {
   const disableModuleConcat = process.env.DISABLE_MODULE_CONCATENATION === 'true' || disableModuleConcatenation;
   const projectName = projectConfig.name();
   const cssModules = projectConfig.cssModules();
@@ -28,8 +27,8 @@ const config = ({debug, separateCss = projectConfig.separateCss(), analyze, disa
 
     module: {
       rules: [
-        ...require('../lib/loaders/sass')(separateCss, cssModules, tpaStyle, projectName).client,
-        ...require('../lib/loaders/less')(separateCss, cssModules, tpaStyle, projectName).client
+        ...require('../src/loaders/sass')(separateCss, cssModules, tpaStyle, projectName).client,
+        ...require('../src/loaders/less')(separateCss, cssModules, tpaStyle, projectName).client
       ]
     },
 
@@ -44,7 +43,7 @@ const config = ({debug, separateCss = projectConfig.separateCss(), analyze, disa
         minimize: !debug
       }),
 
-      new DuplicatePackageCheckerPlugin({verbose: true}),
+      new DuplicatePackageCheckerPlugin({ verbose: true }),
 
       new DynamicPublicPath(),
 
@@ -83,7 +82,7 @@ const config = ({debug, separateCss = projectConfig.separateCss(), analyze, disa
 
 function getEntry() {
   const entry = projectConfig.entry() || projectConfig.defaultEntry();
-  return isSingleEntry(entry) ? {app: entry} : entry;
+  return isSingleEntry(entry) ? { app: entry } : entry;
 }
 
 module.exports = config;

@@ -1,7 +1,5 @@
-
-
 const sass = require('node-sass');
-const { tryRequire } = require('../lib/utils');
+const { tryRequire } = require('../src/utils');
 const { wixCssModulesRequireHook } = require('yoshi-runtime');
 
 // Private wix applitools key
@@ -15,13 +13,13 @@ tryRequire('../private/node_modules/wix-eyes-env');
 tryRequire('../private/node_modules/screenshot-reporter-env');
 
 
-require('../lib/require-hooks');
+require('../src/require-hooks');
 const path = require('path');
 const ld = require('lodash');
-const exists = require('../lib/utils').exists;
-const inTeamCity = require('../lib/utils').inTeamCity;
-const { start } = require('../lib/server-api');
-const globs = require('../lib/globs');
+const exists = require('../src/utils').exists;
+const inTeamCity = require('../src/utils').inTeamCity;
+const { start } = require('../src/server-api');
+const globs = require('../src/globs');
 
 const userConfPath = path.resolve('protractor.conf.js');
 const userConf = exists(userConfPath) ? require(userConfPath).config : null;
@@ -49,7 +47,7 @@ const merged = ld.mergeWith({
       }).css
     });
 
-    require('../lib/require-hooks');
+    require('../src/require-hooks');
 
     return start({ host: 'localhost' }).then((server) => {
       cdnServer = server;

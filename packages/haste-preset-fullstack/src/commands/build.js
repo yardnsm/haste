@@ -44,6 +44,7 @@ module.exports = async (configure) => {
       }),
       write({ target: paths.statics })
     ),
-    run(webpack({ configPath: paths.config.webpack.production }))
+    run(webpack({ configPath: paths.config.webpack.production })),
+    run(webpack({ configPath: paths.config.webpack.development }))
   ]);
 };

@@ -13,8 +13,8 @@ module.exports = {
   entry: './client.js',
   config: {
     webpack: {
-      development: require.resolve('./webpack.config.development'),
-      production: require.resolve('./webpack.config.production')
+      development: require.resolve('./webpack.config.dev'),
+      production: require.resolve('./webpack.config.prod')
     }
   }
 };

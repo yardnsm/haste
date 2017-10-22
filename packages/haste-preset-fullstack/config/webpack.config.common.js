@@ -1,12 +1,10 @@
-
-
 const path = require('path');
 
 const context = path.resolve('./src');
 const projectConfig = require('./project');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 
-const stylable = require('../lib/loaders/stylable');
+const stylable = require('../src/loaders/stylable');
 
 const config = {
   context,
@@ -29,19 +27,19 @@ const config = {
 
   plugins: [
     new CaseSensitivePathsPlugin(),
-    require('../lib/plugins/babelHappyPack')(projectConfig.isAngularProject()),
+    require('../src/plugins/babelHappyPack')(projectConfig.isAngularProject()),
     stylable.plugin()
   ],
 
   module: {
     rules: [
-      require('../lib/loaders/babel')(),
-      require('../lib/loaders/typescript')(projectConfig.isAngularProject()),
-      require('../lib/loaders/graphql')(),
-      require('../lib/loaders/assets')(),
-      require('../lib/loaders/svg')(),
-      require('../lib/loaders/html')(),
-      require('../lib/loaders/raw')(),
+      require('../src/loaders/babel')(),
+      require('../src/loaders/typescript')(projectConfig.isAngularProject()),
+      require('../src/loaders/graphql')(),
+      require('../src/loaders/assets')(),
+      require('../src/loaders/svg')(),
+      require('../src/loaders/html')(),
+      require('../src/loaders/raw')(),
       stylable.rule()
     ]
   },

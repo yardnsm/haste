@@ -18,6 +18,6 @@ module.exports = async (configure) => {
     })
   );
 
-  await run(protractor({ }));
+  await run(protractor({ configPath: require.resolve('../../config/protractor.conf.js') }));
 };
 
