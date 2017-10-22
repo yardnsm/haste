@@ -18,6 +18,11 @@ module.exports = async (configure) => {
     })
   );
 
-  await run(protractor({ configPath: require.resolve('../../config/protractor.conf.js') }));
+  await run(
+    protractor({
+      webdriverManagerArgs: ['--standalone', '--versions.chrome', '2.29', '--gecko', 'false'],
+      configPath: require.resolve('../../config/protractor.conf.js')
+    })
+  );
 };
 

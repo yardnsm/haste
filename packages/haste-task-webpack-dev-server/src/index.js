@@ -9,6 +9,8 @@ module.exports = ({ configPath, port = 3200, hostname = 'localhost' }) => () => 
     const compiler = webpack(config);
 
     app.use(webpackDevMiddleware(compiler));
+    app.use(express.static('dist/statics'));
+
     app.listen(port, hostname, resolve);
   });
 };

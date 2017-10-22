@@ -1,14 +1,11 @@
-const DashboardPlugin = require('haste-plugin-dashboard');
+const LoggerPlugin = require('haste-plugin-logger');
 const paths = require('../../config/paths');
 
 module.exports = async (configure) => {
   const { run, watch, tasks } = configure({
     persistent: true,
     plugins: [
-      new DashboardPlugin({
-        oneLinerTasks: true,
-        tasks: ['server', 'webpack-dev-server', 'mocha']
-      }),
+      new LoggerPlugin(),
     ],
   });
 
@@ -20,7 +17,8 @@ module.exports = async (configure) => {
     run(
       read({ pattern: `{${paths.src},${paths.test}}/**/*.js` }),
       babel(),
-      write({ target: paths.build })
+      write({ target: paths.build }),
+      server({ serverPath: 'index.js' })
     ),
     run(
       read({ pattern: `${paths.src}/**/*.scss` }),
@@ -48,17 +46,26 @@ module.exports = async (configure) => {
       }),
       write({ target: paths.statics })
     ),
-    run(webpackDevServer({ configPath: paths.config.webpack.production })),
-    run(
-      read({ pattern: `${paths.src}/**/*.spec.js` }),
-      mocha({
-        require: [require.resolve('../../config/test-setup')],
-        timeout: 30000,
-      })
-    )
+    run(webpackDevServer({ configPath: paths.config.webpack.development }))
   ]);
 
-  await run(server({ serverPath: 'index.js' }));
+  await run(
+    read({ pattern: `${paths.src}/**/*.spec.js` }),
+    mocha({
+      require: [require.resolve('../../config/test-setup')],
+      timeout: 30000,
+    })
+  );
+
+  watch([`${paths.assets}/**/*.*`, `${paths.src}/**/*.{ejs,html,vm}`, `${paths.src}/**/*.{css,json,d.ts}`], changed => run(
+    read(changed),
+    write({ target: paths.build })
+  ));
+
+  watch([`${paths.assets}/**/*.*`, `${paths.src}/**/*.{ejs,html,vm}`], changed => run(
+    read(changed),
+    write({ target: paths.statics })
+  ));
 
   watch(`${paths.src}/**/*.js`, changed => run(
     read({ pattern: changed }),
