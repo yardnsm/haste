@@ -33,7 +33,7 @@ module.exports = async (configure) => {
           `${paths.src}/**/*.{css,json,d.ts}`,
         ]
       }),
-      write({ target: paths.build })
+      write({ target: paths.build }, { title: 'copy-server-assets' })
     ),
     run(
       read({
@@ -42,9 +42,9 @@ module.exports = async (configure) => {
           `${paths.src}/**/*.{ejs,html,vm}`,
         ]
       }),
-      write({ base: paths.src, target: paths.statics })
+      write({ base: paths.src, target: paths.statics }, { title: 'copy-static-assets' })
     ),
-    run(webpack({ configPath: paths.config.webpack.production })),
-    run(webpack({ configPath: paths.config.webpack.development }))
+    run(webpack({ configPath: paths.config.webpack.production }, { title: 'webpack-production' })),
+    run(webpack({ configPath: paths.config.webpack.development }, { title: 'webpack-development' }))
   ]);
 };
