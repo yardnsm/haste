@@ -42,7 +42,7 @@ module.exports = async (configure) => {
           `${paths.src}/**/*.{ejs,html,vm}`,
         ]
       }),
-      write({ target: paths.statics })
+      write({ base: paths.src, target: paths.statics })
     ),
     run(webpack({ configPath: paths.config.webpack.production })),
     run(webpack({ configPath: paths.config.webpack.development }))
